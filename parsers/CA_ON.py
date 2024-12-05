@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 
-import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 from logging import Logger, getLogger
 from typing import List, Optional
@@ -12,6 +11,7 @@ import arrow
 # pandas processes tabular data
 import pandas as pd
 from requests import Session
+import defusedxml.ElementTree
 
 """
 Some notes about timestamps:
@@ -101,7 +101,7 @@ def _fetch_ieso_xml(
         )
         return dt, None
 
-    xml = ET.fromstring(response.text)
+    xml = defusedxml.ElementTree.fromstring(response.text)
 
     return dt, xml
 

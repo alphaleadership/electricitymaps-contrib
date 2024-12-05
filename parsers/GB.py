@@ -6,8 +6,6 @@ Parser that uses the RTE-FRANCE API to return the following data type(s)
 fetch_price method copied from FR parser.
 Day-ahead Price
 """
-
-import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from logging import Logger, getLogger
 from typing import Optional
@@ -16,6 +14,7 @@ import arrow
 from requests import Session
 
 from parsers.lib.config import refetch_frequency
+import defusedxml.ElementTree
 
 
 @refetch_frequency(timedelta(days=1))
@@ -37,7 +36,7 @@ def fetch_price(
     url = f"http://eco2mix.rte-france.com/curves/getDonneesMarche?dateDeb={formatted_from}&dateFin={formatted_to}&mode=NORM"
 
     response = r.get(url)
-    obj = ET.fromstring(response.content)
+    obj = defusedxml.ElementTree.fromstring(response.content)
     datas = {}
 
     for donnesMarche in obj:
